@@ -8,6 +8,6 @@ public class Price extends Value {
     public Price(Long price) {
 
         super("Product price");
-        this.price_ = price;
+        set_value(price);
     }
 }

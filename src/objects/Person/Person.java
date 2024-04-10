@@ -1,6 +1,7 @@
 package objects.Person;
 
 import objects.Person.Data.*;
+
 public class Person {
     private Name name_;
     //Поле не может быть null
@@ -26,4 +27,9 @@ public class Person {
         this.passportID_ = passportID;
 
     }
+
+    public Object get_name() {
+        return name_.get_value();
+    }
+
 }

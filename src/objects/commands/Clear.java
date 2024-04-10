@@ -1,10 +1,12 @@
 package objects.commands;
 
 import objects.abstract_objects.Command;
+import objects.abstract_objects.CommandHandler;
 
 public class Clear extends Command {
-    public Clear() {
+    public Clear(CommandHandler command_handler) {
         super("clear");
-        set_command_run_line("// Cleared the structure");
+        set_command_description("clears the structure");
+        set_command_handler(command_handler);
     }
 }
