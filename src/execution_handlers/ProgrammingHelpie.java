@@ -1,10 +1,10 @@
 package execution_handlers;
 
 public class ProgrammingHelpie {
-    static Boolean help = Boolean.TRUE;
+    static Boolean help_on = Boolean.TRUE;
 
     public static void comment(String line) {
-        if(help) {
+        if(help_on) {
             System.out.println("--- " + line);
         }
     }

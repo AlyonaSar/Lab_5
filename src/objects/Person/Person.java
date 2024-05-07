@@ -3,6 +3,8 @@ package objects.Person;
 import objects.Person.Data.*;
 
 public class Person {
+
+    private PersonHandler handler_;
     private Name name_;
     //Поле не может быть null
     // Строка не может быть пустой
@@ -31,5 +33,7 @@ public class Person {
     public Object get_name() {
         return name_.get_value();
     }
+
+    public void set_handler(PersonHandler handler) { this.handler_ = handler; }
 
 }

@@ -1,26 +1,44 @@
 package objects.Product;
 
-import execution_handlers.ProgrammingHelpie;
+import execution_handlers.*;
 import objects.Person.*;
 import objects.Product.Data.*;
 import objects.abstract_objects.CommandDisplay;
+import objects.abstract_objects.Passer;
+import objects.abstract_objects.Space;
 import org.jetbrains.annotations.NotNull;
 
-public class ProductHandler implements CommandDisplay {
+import java.util.ArrayList;
 
-    public Product handle(long last_id) {
-
-        ID id = new IDHandler().handle_next(last_id);
-        String line = program_ask("What is the name?");
+public class ProductHandler implements CommandDisplay, Passer {
+    private Space space_;
+    public ProductHandler(String space_name) {
+        set_space(space_name);
+    }
+    public Product handle() {
+        InteractionHandler interactionHandler_ = space_.get_object(InteractionHandler.class);
+        ID id = new IDHandler().handle_next(space_.get_object(ProductLHMHandler.class));
+        String line = interactionHandler_.ask("name");
         Name name = new NameHandler().handle(line);
-        line = program_ask("What are the coordinates?");
+        line = interactionHandler_.ask("coordinates");
         Coordinates coordinates = new CoordinatesHandler().handle(line);
-        line = program_ask("What is the price?");
+        line = interactionHandler_.ask("price");
         Price price = new PriceHandler().handle(line);
-        line = program_ask("What is the unit of measure?");
+        line = interactionHandler_.ask("unit of measure (" + UnitOfMeasure.values() + ")");
         UnitOfMeasure unitOfMeasure = new UnitOfMeasureHandler().handle(line);
-        Person owner = new PersonHandler().handle();
+        Person owner = new PersonHandler(space_.toString()).handle();
         CreationDate creationDate = new CreationDateHandler().handle();
+
+        /*
+        ID id = new IDHandler().handle_next(list.get(0));
+        Name name = new NameHandler().handle(list.get(1));
+        Coordinates coordinates = new CoordinatesHandler().handle(list.get(2));
+        Price price = new PriceHandler().handle(list.get(3));
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasureHandler().handle(list.get(4));
+        ArrayList<Object> subList = (ArrayList<Object>) list.subList(4, list.size());
+        Person owner = new PersonHandler().handle(subList);
+        CreationDate creationDate = new CreationDateHandler().handle();
+        */
 
         Product product = new Product(
                 id,
@@ -34,8 +52,9 @@ public class ProductHandler implements CommandDisplay {
         return product;
     }
 
-    public Product handle(Product product, long last_id) {
-//        product.set_id(new IDHandler().handle_next(last_id));
+    public Product handle_new(long last_id) {
+        Product product = handle();
+        product.set_id(new IDHandler().handle_next(last_id));
         return product;
     }
 
@@ -50,4 +69,11 @@ public class ProductHandler implements CommandDisplay {
         program_print("     The owner is: " + product.get_owner().toString());
     }
 
+    @Override
+    public void set_value(Object object) {}
+
+    @Override
+    public void set_space(String space_name) {
+        space_ = space_list_.get_space(space_name);
+    }
 }

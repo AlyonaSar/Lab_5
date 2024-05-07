@@ -1,21 +1,36 @@
 package execution_handlers;
 
 import objects.Product.ProductLHMHandler;
+import objects.abstract_objects.Passer;
+import objects.abstract_objects.Space;
+import objects.abstract_objects.SpaceList;
 import objects.commands.AllCommandsListHandler;
 
-public class RunInteractionHandler {
-    private LineScanner linescanner_ = new LineScanner();
+public class RunInteractionHandler implements Passer {
+    private Space space_;
 
-    public void run_interaction() {
-        ProgrammingHelpie.comment("Started interaction");
-        String reusableLine_;
-        LineHandler linehandler_ = new LineHandler(new AllCommandsListHandler(new ProductLHMHandler()));
-        while(true) {
-            reusableLine_ = linescanner_.get_line();
-            linehandler_.handle(reusableLine_);
-            ProgrammingHelpie.comment("Command execution complete");
-        }
+    public RunInteractionHandler(String space_name) {
+        set_space(space_name);
     }
 
+    public void run_interaction() {
+        ProgrammingHelpie.comment("Starting interaction");
+        InteractionHandler interactionHandler_ = new InteractionHandler(space_.toString());
+        AllCommandsListHandler allCommandsListHandler_ = new AllCommandsListHandler(space_.toString());
+        ProductLHMHandler productLHMHandler_ = new ProductLHMHandler(space_.toString());
+        FileReadHandler fileReadHandler_ = new FileReadHandler(space_.toString());
 
+        space_.add_object(allCommandsListHandler_);
+        space_.add_object(productLHMHandler_);
+        space_.add_object(interactionHandler_);
+        space_.add_object(fileReadHandler_);
+
+        while(true) {
+            interactionHandler_.interact();
+        }
+    }
+    @Override
+    public void set_space(String space_name) {
+        space_ = space_list_.get_space(space_name);
+    }
 }

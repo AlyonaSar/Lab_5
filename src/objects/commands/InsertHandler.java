@@ -14,7 +14,6 @@ public class InsertHandler extends CommandHandler implements IObserver {
     ProductLHMHandler productLHMHandler_;
 
     public InsertHandler(IObservable productLHMHandler) {
-        become_observer(productLHMHandler);
         productLHMHandler_ = (ProductLHMHandler) productLHMHandler;
     }
     @Override

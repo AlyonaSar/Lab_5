@@ -1,17 +1,22 @@
 package objects.commands;
 
-import objects.abstract_objects.Command;
-import objects.abstract_objects.CommandHandler;
-import objects.abstract_objects.IObservable;
-import objects.abstract_objects.IObserver;
+import objects.abstract_objects.*;
 
-public class HelpHandler extends CommandHandler implements IObserver {
+import java.util.LinkedHashMap;
 
+public class HelpHandler extends CommandHandler implements IObserver, Passer {
+    private Space space_;
+    private LinkedHashMap command_list_;
     private AllCommandsListHandler allCommandsListHandler_;
 
-    public HelpHandler(IObservable allCommandsListHandler) {
-        become_observer(allCommandsListHandler);
-        allCommandsListHandler_ = (AllCommandsListHandler) allCommandsListHandler;
+
+    public HelpHandler(String space_name) {
+        set_space(space_name);
+        allCommandsListHandler_ = space_.get_object(AllCommandsListHandler.class);
+    }
+
+    public void set_command_list(LinkedHashMap command_list) {
+        this.command_list_ = command_list;
     }
 
     @Override
@@ -19,11 +24,16 @@ public class HelpHandler extends CommandHandler implements IObserver {
         if(input_array.length != 1) {
             throw new InvalidParameterException();
         } else {
-            for (Object command_name :  allCommandsListHandler_.get_list().keySet()) {
+            for (Object command_name :  space_.get_object(AllCommandsListHandler.class).get_list().keySet()) {
                 Command command = (Command) allCommandsListHandler_.get_list().get(command_name);
                 program_print("Command " + command_name.toString() + ": "
                         + command.get_command_description());
             }
         }
+    }
+
+    @Override
+    public void set_space(String space_name) {
+        space_ = space_list_.get_space(space_name);
     }
 }

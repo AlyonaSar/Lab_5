@@ -1,22 +1,26 @@
 package execution_handlers;
 
-import objects.Product.ProductLHMHandler;
 import objects.abstract_objects.Command;
 import objects.abstract_objects.CommandHandler;
+import objects.abstract_objects.Passer;
+import objects.abstract_objects.Space;
 import objects.commands.*;
 
-import java.util.ArrayList;
+import javax.sound.sampled.Line;
 import java.util.LinkedHashMap;
 
 
-public class LineHandler {
-    private LinkedHashMap<String, Command> command_list_;
-    public LineHandler(AllCommandsListHandler command_list_handler) {
-        command_list_ = command_list_handler.get_list();
-        ProgrammingHelpie.comment("LineHandler sees the command list as: " + command_list_.toString());
+public class LineHandler implements Passer {
+    private Space space_;
+
+    public LineHandler(String space_name) {
+        set_space(space_name);
     }
 
     private Command identify(String line) throws NoSuchCommandFoundException {
+        AllCommandsListHandler command_list_handler_ = this.space_.get_object(AllCommandsListHandler.class);
+        LinkedHashMap<String, Command> command_list_ = command_list_handler_.get_list();
+
         if(command_list_.containsKey(line)) {
             ProgrammingHelpie.comment("Command found");
             Command command = command_list_.get(line);
@@ -40,6 +44,11 @@ public class LineHandler {
         } catch (NoSuchCommandFoundException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @Override
+    public void set_space(String space_name) {
+        space_ = space_list_.get_space(space_name);
     }
 
     class NoSuchCommandFoundException extends RuntimeException {

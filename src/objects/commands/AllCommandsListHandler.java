@@ -1,28 +1,35 @@
 package objects.commands;
 
+import execution_handlers.FileReadHandler;
+import execution_handlers.LineHandler;
 import execution_handlers.ProgrammingHelpie;
 import objects.Product.ProductLHMHandler;
 import objects.abstract_objects.Command;
-import objects.abstract_objects.IObservable;
+import objects.abstract_objects.Passer;
+import objects.abstract_objects.Space;
 
 import java.util.LinkedHashMap;
 
-public class AllCommandsListHandler implements IObservable {
-
+public class AllCommandsListHandler implements Passer {
+    private Space space_;
     private LinkedHashMap<String, Command> command_list_ = new LinkedHashMap<>();
 
-    public AllCommandsListHandler(ProductLHMHandler productLHMHandler) {
+    public AllCommandsListHandler(String space_name) {
+        set_space(space_name);
+    }
+
+    public void set_command_list() {
 
         ProgrammingHelpie.comment("Setting the list of commands");
 
-        Help help = new Help(new HelpHandler(this));
-        Info info = new Info(new InfoHandler(productLHMHandler));
-        Show show = new Show(new ShowHandler(productLHMHandler));
-        Insert insert = new Insert(new InsertHandler(productLHMHandler));
+        Help help = new Help(new HelpHandler(space_.toString()));
+        Info info = new Info(new InfoHandler(space_.toString()));
+        Show show = new Show(new ShowHandler(space_.toString()));
+        Insert insert = new Insert(new InsertHandler(space_.toString()));
         Update update = new Update(new UpdateHandler());
-        RemoveKey removeKey = new RemoveKey(new RemoveKeyHandler());
-        Clear clear = new Clear(new ClearHandler());
-        ExecuteScript executeScript = new ExecuteScript(new ExecuteScriptHandler());
+        RemoveKey removeKey = new RemoveKey(new RemoveKeyHandler(space_.toString()));
+        Clear clear = new Clear(new ClearHandler(space_.toString()));
+        ExecuteScript executeScript = new ExecuteScript(new ExecuteScriptHandler(space_.toString()));
         Save save = new Save(new SaveHandler());
         Exit exit = new Exit(new ExitHandler());
         RemoveLower removeLower = new RemoveLower(new RemoveLowerHandler());
@@ -50,14 +57,18 @@ public class AllCommandsListHandler implements IObservable {
         addCommand(filterLessThanOwner);
 
 //        ProgrammingHelpie.comment(command_list_.toString());
-        notify_all();
     }
 
-    public LinkedHashMap get_list() {
+    public LinkedHashMap<String, Command> get_list() {
         return command_list_;
     }
 
     public void addCommand(Command command) {
         command_list_.put(command.ToString(), command);
+    }
+
+    @Override
+    public void set_space(String space_name) {
+        space_ = space_list_.get_space(space_name);
     }
 }

@@ -1,30 +1,35 @@
 package objects.Product;
 
+import execution_handlers.FileReadHandler;
+import execution_handlers.LineHandler;
+import execution_handlers.LineScanner;
 import execution_handlers.ProgrammingHelpie;
 import objects.Product.Data.CoordinatesHandler;
 import objects.abstract_objects.CommandDisplay;
 import objects.abstract_objects.IObservable;
+import objects.abstract_objects.Passer;
+import objects.abstract_objects.Space;
 
 import java.util.*;
 
-public class ProductLHMHandler implements IObservable, CommandDisplay {
+public class ProductLHMHandler implements IObservable, CommandDisplay, Passer {
+    private Space space_;
     private ProductLHM productLHM_ = new ProductLHM();
+    private ProductHandler productHandler_ = new ProductHandler(space_.toString());
     private long last_ID_value_ = 0;
     private Date initializationDate_ = new Date();
-    //private LinkedHashMap<Integer, Product> product_list_ = new LinkedHashMap<>();
-
-    public ProductLHMHandler() {}
+    public ProductLHMHandler(String space_name) {
+        set_space(space_name);
+    }
 
     public void add_element(int key) {
         ProgrammingHelpie.comment("Adding new element to the product list");
-        productLHM_.add_element(key, last_ID_value_);
-        last_ID_value_ = productLHM_.get_list().size();
-        ProgrammingHelpie.comment("Successfully added the new element, new last_ID = " + last_ID_value_);
+        productLHM_.add_element(key, productHandler_.handle_new(last_ID_value_));
+        ProgrammingHelpie.comment("Successfully added the new element, new last_ID = " + productLHM_.get_list().size());
         notify_all();
     }
 
     public void remove_element(int key) {
-        ProgrammingHelpie.comment("Trying to remove the element");
         productLHM_.remove_element(key);
         notify_all();
     }
@@ -41,9 +46,8 @@ public class ProductLHMHandler implements IObservable, CommandDisplay {
 
     public void display(int key) {
         ProgrammingHelpie.comment("Trying to display product with key: " + key);
-        ProductHandler productHandler = new ProductHandler();
         Product product = productLHM_.get(key);
-        productHandler.display(product);
+        productHandler_.display(product);
     }
 
     public LinkedHashMap get_list() {
@@ -63,5 +67,12 @@ public class ProductLHMHandler implements IObservable, CommandDisplay {
         ProgrammingHelpie.comment("Getting the initialization date (inside handler): " + initializationDate_.toString());
         return initializationDate_;
     }
+    public void clear() {
+        productLHM_.clear();
+    }
 
+    @Override
+    public void set_space(String space_name) {
+        space_ = space_list_.get_space(space_name);
+    }
 }

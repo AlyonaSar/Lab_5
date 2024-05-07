@@ -10,15 +10,21 @@ import java.time.format.DateTimeFormatter;
 
 public class BirthdayHandler {
 
-    public Birthday handle(String string) {
-        ProgrammingHelpie.comment("Trying to format the input");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.parse(string, formatter);
-        ZoneId zoneId = ZoneId.of("UTC");
-        ZonedDateTime zonedDateTime = localDate.atStartOfDay(zoneId);
-        ProgrammingHelpie.comment("Got through the parsing of Birthday date");
-        Birthday birthday = new Birthday(zonedDateTime);
-        ProgrammingHelpie.comment("Birthday set to: " + birthday.get_value());
-        return birthday;
+    public Birthday handle(Object info) {
+        try {
+            String string = (String) info;
+            ProgrammingHelpie.comment("Trying to format the input");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate localDate = LocalDate.parse(string, formatter);
+            ZoneId zoneId = ZoneId.of("UTC");
+            ZonedDateTime zonedDateTime = localDate.atStartOfDay(zoneId);
+            ProgrammingHelpie.comment("Got through the parsing of Birthday date");
+            Birthday birthday = new Birthday(zonedDateTime);
+            ProgrammingHelpie.comment("Birthday set to: " + birthday.get_value());
+            return birthday;
+        } catch (Exception e) {
+            System.err.println("Error: Could not convert the input to a valid Birthday. Please try again.");
+            return null;
+        }
     }
 }
